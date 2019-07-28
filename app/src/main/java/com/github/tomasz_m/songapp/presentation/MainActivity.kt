@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = model
         binding.recyclerView.adapter = songAdapter
 
-        val dataObserver = Observer<Array<Song>> { data ->
+        val dataObserver = Observer<List<Song>> { data ->
             songAdapter.setData(data)
             Log.d("newData", "size" + data.size)
         }

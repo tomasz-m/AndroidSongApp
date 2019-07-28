@@ -1,9 +1,9 @@
 package com.github.tomasz_m.songapp.domain
 
 enum class Source {
-    REMOTE, LOCAL
+    REMOTE, LOCAL, ALL
 }
 
 interface SongRepository {
-    fun getSongs(sources: Array<Source>):Array<Song>
+    fun getSongs(callback: (List<Song>) -> Unit )
 }
