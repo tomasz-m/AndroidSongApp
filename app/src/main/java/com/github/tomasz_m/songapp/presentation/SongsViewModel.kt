@@ -17,7 +17,9 @@ class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
         get() = _songs
 
     private fun loadSongs(liveData: MutableLiveData<List<Song>>) {
-        songsUseCase.songs(Source.LOCAL) { liveData.value = it }
+        songsUseCase.songs(Source.ALL) {
+            liveData.postValue(it)
+        }
     }
 }
 

@@ -1,31 +1,19 @@
 package com.github.tomasz_m.songapp.repository
 
-import android.util.Log
 import com.github.tomasz_m.songapp.domain.Song
 import com.github.tomasz_m.songapp.domain.SongRepository
-import com.github.tomasz_m.songapp.networking.ApiClient
-import com.github.tomasz_m.songapp.networking.Model
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.github.tomasz_m.songapp.networking.ApiInterface
 
-class RemoteSongRepositoryImpl : SongRepository {
-    override fun getSongs(callback: (List<Song>) -> Unit) {
+class RemoteSongRepositoryImpl(private val api: ApiInterface) : SongRepository {
+    override suspend fun getSongs(): List<Song> {
 
-        ApiClient.getClient.getSongs().enqueue(object : Callback<Model.Response> {
+        val response = api.getSongs()
 
-            override fun onResponse(call: Call<Model.Response>?, response: Response<Model.Response>?) {
-                if (response?.body()?.results != null) {
-                    val mapped = response.body()!!.results.map { Song(it.trackName, it.artistName) }
-                    callback(mapped)
-                }
-            }
+        if (response.body()?.results != null) {
+            return response.body()!!.results.map { Song(it.trackName, it.artistName) };
+        }
+        return emptyList()
 
-            override fun onFailure(call: Call<Model.Response>?, t: Throwable?) {
-                Log.d("onFailure", "onFailure")
-            }
-
-        })
 
     }
 

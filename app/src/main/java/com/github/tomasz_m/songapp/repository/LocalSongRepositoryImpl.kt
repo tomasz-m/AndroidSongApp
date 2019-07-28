@@ -17,19 +17,20 @@ data class FileSong(
 )
 
 class LocalSongRepositoryImpl(private val appContext: Context) : SongRepository {
-    override fun getSongs(callback: (List<Song>) -> Unit) {
+    override suspend fun getSongs(): List<Song> {
 
         val inputStream = appContext.assets.open("localSongs.json")
 
         val songs = readJsonStream(inputStream)
 
-        callback(songs.map{Song(it.songName, it.artistName)})
+        return songs.map { Song(it.songName, it.artistName) }
     }
 
     @Throws(IOException::class)
     fun readJsonStream(`in`: InputStream): List<FileSong> {
         val reader = JsonReader(InputStreamReader(`in`, "UTF-8"))
         val gson = Gson()
+
         val songs = ArrayList<FileSong>()
         reader.beginArray()
         while (reader.hasNext()) {

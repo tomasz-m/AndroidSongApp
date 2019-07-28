@@ -1,13 +1,22 @@
 package com.github.tomasz_m.songapp.domain
 
-class SongsUseCaseImpl(private val localSongRepository: SongRepository, val remoteSongRepository: SongRepository) : SongsUseCase {
+import kotlinx.coroutines.*
+
+class SongsUseCaseImpl(private val localSongRepository: SongRepository, val remoteSongRepository: SongRepository) :
+    SongsUseCase {
 
     override fun songs(source: Source, callback: (List<Song>) -> Unit) {
 
-        if(source == Source.LOCAL) {
-            localSongRepository.getSongs { newSongs: List<Song> -> callback(newSongs) }
-        }else if(source == Source.REMOTE) {
-            remoteSongRepository.getSongs { newSongs: List<Song> -> callback(newSongs) }
+        if (source == Source.LOCAL) {
+            GlobalScope.launch { callback(localSongRepository.getSongs()) }
+        } else if (source == Source.REMOTE) {
+            GlobalScope.launch { callback(remoteSongRepository.getSongs()) }
+        } else if (source == Source.ALL) {
+            GlobalScope.launch {
+                val remote = remoteSongRepository.getSongs()
+                val local =localSongRepository.getSongs()
+                callback(remote + local)
+            }
         }
     }
 }

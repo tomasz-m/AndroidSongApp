@@ -5,5 +5,5 @@ enum class Source {
 }
 
 interface SongRepository {
-    fun getSongs(callback: (List<Song>) -> Unit )
+    suspend fun getSongs():List<Song>
 }
