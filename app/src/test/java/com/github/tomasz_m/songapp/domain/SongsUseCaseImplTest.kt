@@ -7,12 +7,10 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-
-
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+import com.nhaarman.mockitokotlin2.*
 
 
 @RunWith(MockitoJUnitRunner::class)
@@ -27,7 +25,6 @@ class SongsUseCaseImplTest {
     @Mock
     private lateinit var callback: (List<Song>) -> Unit
 
-
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     @Before
@@ -41,15 +38,22 @@ class SongsUseCaseImplTest {
         mainThreadSurrogate.close()
     }
 
-
     @Test
-    fun `requesting for remote data does not call local repository`() = runBlockingTest {
-
+    fun `requesting for remote data calls remote repository`() = runBlockingTest {
         val songsUseCase = SongsUseCaseImpl(localRepository, remoteRepository)
 
         songsUseCase.songs(Source.REMOTE, callback)
 
-        verify(localRepository, never()).getSongs()
+        verify(remoteRepository, times(1)).getSongs()
+    }
 
+
+    @Test
+    fun `requesting for local data does not call remote repository`() = runBlockingTest {
+        val songsUseCase = SongsUseCaseImpl(localRepository, remoteRepository)
+
+        songsUseCase.songs(Source.LOCAL, callback)
+
+        verify(remoteRepository, never()).getSongs()
     }
 }

@@ -3,11 +3,9 @@ package com.github.tomasz_m.songapp.presentation
 import com.github.tomasz_m.songapp.domain.SongsUseCase
 import com.github.tomasz_m.songapp.domain.Source
 import org.junit.Test
-
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-
 import com.nhaarman.mockitokotlin2.*
 
 @RunWith(MockitoJUnitRunner::class)
