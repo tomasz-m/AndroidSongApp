@@ -15,7 +15,6 @@ import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
-
     inner class ViewModelFactory(private val songsUseCase: SongsUseCase) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return SongsViewModel(songsUseCase) as T

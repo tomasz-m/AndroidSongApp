@@ -11,10 +11,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val appModule = module {
-
     single { ApiClient.getClient }
-    single<SongRepository>(named("local")) { LocalSongRepositoryImpl(androidContext()) }
-    single<SongRepository>(named("remote")) { RemoteSongRepositoryImpl(get()) }
-    single<SongsUseCase> { SongsUseCaseImpl(get(named("local")), get(named("remote"))) }
-
+    single<SongRepository>(named("localRepository")) { LocalSongRepositoryImpl(androidContext()) }
+    single<SongRepository>(named("remoteRepository")) { RemoteSongRepositoryImpl(get()) }
+    single<SongsUseCase> {
+        SongsUseCaseImpl(get(named("localRepository")), get(named("remoteRepository")))
+    }
 }

@@ -7,11 +7,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-
-    var BASE_URL:String="https://itunes.apple.com/"
+    var BASE_URL: String = "https://itunes.apple.com/"
     val getClient: ApiInterface
         get() {
-
             val gson = GsonBuilder()
                 .setLenient()
                 .create()
@@ -26,7 +24,5 @@ object ApiClient {
                 .build()
 
             return retrofit.create(ApiInterface::class.java)
-
         }
-
 }

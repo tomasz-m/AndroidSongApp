@@ -14,7 +14,6 @@ enum class SourceFilterOptions {
 }
 
 class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
-
     val isLoading = ObservableBoolean(false)
     val showEmptyView = ObservableBoolean(false)
     val selectedRadioButton = ObservableField(SourceFilterOptions.ALL)
@@ -44,7 +43,7 @@ class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
     private fun loadSongs(liveData: MutableLiveData<List<Song>>) {
         isLoading.set(true)
         val source = filterOptionToSource(selectedRadioButton.get())
-        songsUseCase.songs(source) { newSongs, status->
+        songsUseCase.songs(source) { newSongs, status ->
             showEmptyView.set(newSongs.isEmpty())
             liveData.postValue(newSongs)
             isLoading.set(false)

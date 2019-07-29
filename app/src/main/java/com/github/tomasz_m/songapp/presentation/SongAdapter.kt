@@ -10,7 +10,6 @@ import com.github.tomasz_m.songapp.domain.Song
 import kotlinx.android.synthetic.main.song_list_item.view.*
 
 class SongAdapter : RecyclerView.Adapter<SongAdapter.SongsViewHolder>(), BindableAdapter<List<Song>> {
-
     override fun setData(data: List<Song>) {
         songs = data
         notifyDataSetChanged()

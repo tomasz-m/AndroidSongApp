@@ -12,7 +12,6 @@ import java.io.InputStream
 import java.io.InputStreamReader
 
 class LocalSongRepositoryImpl(private val appContext: Context) : SongRepository {
-
     data class FileSong(
         @SerializedName("Song Clean") val songName: String,
         @SerializedName("ARTIST CLEAN") val artistName: String,
@@ -25,7 +24,7 @@ class LocalSongRepositoryImpl(private val appContext: Context) : SongRepository 
 
         return try {
             val songs = readJsonStream(inputStream)
-            SongsResult(songs.map { Song(it.songName, it.artistName,it.releaseYear) }, Status.OK)
+            SongsResult(songs.map { Song(it.songName, it.artistName, it.releaseYear) }, Status.OK)
         } catch (ex: IOException) {
             SongsResult(emptyList(), Status.ERROR)
         }

@@ -8,13 +8,12 @@ import org.koin.ext.isInt
 import java.lang.Exception
 
 class RemoteSongRepositoryImpl(private val api: ApiInterface) : SongRepository {
-
-    private fun stringDateToYear(date: String):String{
+    private fun stringDateToYear(date: String): String {
         val year = date.split("-")[0]
-        if(!year.isInt()) {
+        if (!year.isInt()) {
             return ""
         }
-        return  year
+        return year
     }
 
     override suspend fun getSongs(): SongsResult {
@@ -32,7 +31,7 @@ class RemoteSongRepositoryImpl(private val api: ApiInterface) : SongRepository {
                 .map { Song(it.trackName, it.artistName, stringDateToYear(it.releaseDate)) }
             return SongsResult(songs, Status.OK)
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return SongsResult(emptyList(), Status.ERROR)
         }
     }
