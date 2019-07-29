@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <import type="com.github.tomasz_m.songapp.presentation.SourceFilterOptions"/>
 
         <variable
@@ -13,60 +15,86 @@
                 type="com.github.tomasz_m.songapp.presentation.SongsViewModel"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/rootLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <RadioGroup
-                android:id="@+id/radiogroup"
-                android:background="#D1D1D1"
+        <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                app:layout_constraintTop_toTopOf="parent">
-            <RadioButton
-                    android:checked="@{viewModel.selectedRadioButton.equals(SourceFilterOptions.ALL)}"
-                    android:onClick="@{()->viewModel.onSelectedRadioButton(SourceFilterOptions.ALL)}"
-                    android:text="@string/all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/radioButtonAll"/>
-            <RadioButton
-                    android:checked="@{viewModel.selectedRadioButton.equals(SourceFilterOptions.REMOTE)}"
-                    android:onClick="@{()->viewModel.onSelectedRadioButton(SourceFilterOptions.REMOTE)}"
-                    android:text="@string/remote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/radioButtonRemote"/>
-            <RadioButton
-                    android:checked="@{viewModel.selectedRadioButton.equals(SourceFilterOptions.LOCAL)}"
-                    android:onClick="@{()->viewModel.onSelectedRadioButton(SourceFilterOptions.LOCAL)}"
-                    android:text="@string/local"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/radioButtonLocal"/>
-        </RadioGroup>
+                android:layout_height="match_parent">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swiperefresh"
-                android:layout_width="match_parent"
-                app:refreshing="@{viewModel.isLoading}"
-                app:onRefreshListener="@{() -> viewModel.onRefresh()}"
-                tools:layout_editor_absoluteX="0dp"
-                app:layout_constraintTop_toBottomOf="@+id/radiogroup"
-                android:layout_height="0dp" app:layout_constraintBottom_toBottomOf="parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="19dp" android:id="@+id/textView" android:layout_weight="1"
+                    android:visibility="@{viewModel.showEmptyView ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/swiperefresh"
+                    app:layout_constraintTop_toBottomOf="@+id/view"
+                    app:layout_constraintEnd_toEndOf="@+id/swiperefresh"
+                    app:layout_constraintStart_toStartOf="@+id/swiperefresh" android:text="@string/songs_list_empty_message"/>
+            <RadioGroup
+                    android:id="@+id/radiogroup"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/song_list_item"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintTop_toTopOf="parent">
+                <RadioButton
+                        android:checked="@{viewModel.selectedRadioButton.equals(SourceFilterOptions.ALL)}"
+                        android:onClick="@{()->viewModel.onSelectedRadioButton(SourceFilterOptions.ALL)}"
+                        android:text="@string/all"
+                        android:layout_marginEnd="15dp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButtonAll"/>
+                <RadioButton
+                        android:checked="@{viewModel.selectedRadioButton.equals(SourceFilterOptions.REMOTE)}"
+                        android:onClick="@{()->viewModel.onSelectedRadioButton(SourceFilterOptions.REMOTE)}"
+                        android:text="@string/remote"
+                        android:layout_marginEnd="15dp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButtonRemote"/>
+                <RadioButton
+                        android:checked="@{viewModel.selectedRadioButton.equals(SourceFilterOptions.LOCAL)}"
+                        android:onClick="@{()->viewModel.onSelectedRadioButton(SourceFilterOptions.LOCAL)}"
+                        android:text="@string/local"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioButtonLocal"/>
+            </RadioGroup>
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                    app:layout_constraintTop_toBottomOf="@+id/radiogroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#aaaaaa" android:id="@+id/view"/>
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swiperefresh"
+                    android:layout_width="match_parent"
+                    app:refreshing="@{viewModel.isLoading}"
+                    app:onRefreshListener="@{() -> viewModel.onRefresh()}"
+                    tools:layout_editor_absoluteX="0dp"
+                    app:layout_constraintTop_toBottomOf="@+id/radiogroup"
+                    android:layout_height="0dp" app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/song_list_item"/>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 </layout>

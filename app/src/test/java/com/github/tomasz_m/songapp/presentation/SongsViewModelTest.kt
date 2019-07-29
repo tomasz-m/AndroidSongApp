@@ -1,7 +1,6 @@
 package com.github.tomasz_m.songapp.presentation
 
 import com.github.tomasz_m.songapp.domain.SongsUseCase
-import com.github.tomasz_m.songapp.domain.Source
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -19,7 +18,7 @@ class SongsViewModelTest {
         val viewModel = SongsViewModel(songsUseCase)
         viewModel.onSelectedRadioButton(SourceFilterOptions.REMOTE)
 
-        verify(songsUseCase, atLeastOnce()).songs(eq(Source.REMOTE), any())
+        verify(songsUseCase, atLeastOnce()).songs(eq(SongsUseCase.Source.REMOTE), any())
     }
 
 }

@@ -1,7 +1,6 @@
 package com.github.tomasz_m.songapp.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -12,6 +11,7 @@ import com.github.tomasz_m.songapp.R
 import com.github.tomasz_m.songapp.databinding.ActivityMainBinding
 import com.github.tomasz_m.songapp.domain.Song
 import com.github.tomasz_m.songapp.domain.SongsUseCase
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
@@ -40,9 +40,28 @@ class MainActivity : AppCompatActivity() {
 
         val dataObserver = Observer<List<Song>> { data ->
             songAdapter.setData(data)
-            Log.d("newData", "size" + data.size)
         }
 
         model.songs.observe(this, dataObserver)
+        model.notifications.observe(this, Observer {
+            it.getContentIfNotHandled()?.let { status ->
+                displayStatusSnackbar(status)
+            }
+        })
+    }
+
+    private fun displayStatusSnackbar(status: SongsUseCase.Status) {
+        val messageResId: Int? = useCaseStatusToMessageResId(status)
+        if (messageResId != null) {
+            Snackbar.make(findViewById(R.id.rootLayout), messageResId, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun useCaseStatusToMessageResId(status: SongsUseCase.Status): Int? {
+        return when (status) {
+            SongsUseCase.Status.OK -> null
+            SongsUseCase.Status.NETWORK_ERROR -> R.string.message_check_internet_connection
+            SongsUseCase.Status.NETWORK_ERROR_CASHED -> R.string.message_returned_cached
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.github.tomasz_m.songapp.domain
 
-enum class Source {
-    REMOTE, LOCAL, ALL
-}
-
 interface SongRepository {
-    suspend fun getSongs():List<Song>
+
+    data class SongsResult(val songs:List<Song>, val status: Status)
+
+    enum class Status {
+        OK, ERROR, CACHED
+    }
+    suspend fun getSongs():SongsResult
 }

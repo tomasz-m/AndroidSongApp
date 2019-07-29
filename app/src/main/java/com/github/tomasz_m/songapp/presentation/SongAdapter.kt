@@ -34,6 +34,7 @@ class SongAdapter : RecyclerView.Adapter<SongAdapter.SongsViewHolder>(), Bindabl
         fun bind(song: Song) {
             itemView.songName.text = song.name
             itemView.artistName.text = song.artist
+            itemView.releaseYear.text = song.releaseYear
         }
     }
 }

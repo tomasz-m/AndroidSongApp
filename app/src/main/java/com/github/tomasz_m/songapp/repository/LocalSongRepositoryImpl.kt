@@ -3,6 +3,7 @@ package com.github.tomasz_m.songapp.repository
 import android.content.Context
 import com.github.tomasz_m.songapp.domain.Song
 import com.github.tomasz_m.songapp.domain.SongRepository
+import com.github.tomasz_m.songapp.domain.SongRepository.*
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.stream.JsonReader
@@ -10,20 +11,24 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
-
-data class FileSong(
-    @SerializedName("Song Clean") val songName: String,
-    @SerializedName("ARTIST CLEAN") val artistName: String
-)
-
 class LocalSongRepositoryImpl(private val appContext: Context) : SongRepository {
-    override suspend fun getSongs(): List<Song> {
+
+    data class FileSong(
+        @SerializedName("Song Clean") val songName: String,
+        @SerializedName("ARTIST CLEAN") val artistName: String,
+        @SerializedName("Release Year") val releaseYear: String
+    )
+
+    override suspend fun getSongs(): SongsResult {
 
         val inputStream = appContext.assets.open("localSongs.json")
 
-        val songs = readJsonStream(inputStream)
-
-        return songs.map { Song(it.songName, it.artistName) }
+        return try {
+            val songs = readJsonStream(inputStream)
+            SongsResult(songs.map { Song(it.songName, it.artistName,it.releaseYear) }, Status.OK)
+        } catch (ex: IOException) {
+            SongsResult(emptyList(), Status.ERROR)
+        }
     }
 
     @Throws(IOException::class)

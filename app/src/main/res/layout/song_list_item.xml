@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="10dp">
+        android:padding="20dp">
 
-    <LinearLayout
-            android:orientation="vertical"
+    <TextView
+            android:textSize="18sp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:id="@+id/songName"
+            tools:text="Lalala nanana"/>
 
-        <TextView
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:id="@+id/songName"/>
+    <TextView
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/artistName"
+            tools:text="Jack Johnson"/>
 
-        <TextView
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:id="@+id/artistName"/>
+    <TextView
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/releaseYear"
+            tools:text="2019"/>
 
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</LinearLayout>
