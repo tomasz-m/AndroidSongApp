@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.tomasz_m.songapp.R
-import com.github.tomasz_m.songapp.databinding.BindableAdapter
+import com.github.tomasz_m.songapp.presentation.helpers.BindableAdapter
 import com.github.tomasz_m.songapp.domain.Song
 import kotlinx.android.synthetic.main.song_list_item.view.*
 
-class SongAdapter : RecyclerView.Adapter<SongAdapter.SongsViewHolder>(), BindableAdapter<List<Song>> {
+class SongAdapter : RecyclerView.Adapter<SongAdapter.SongsViewHolder>(),
+    BindableAdapter<List<Song>> {
     override fun setData(data: List<Song>) {
         songs = data
         notifyDataSetChanged()
