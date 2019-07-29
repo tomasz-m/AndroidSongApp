@@ -1,4 +1,4 @@
-package com.github.tomasz_m.songapp.networking
+package com.github.tomasz_m.songapp.repository.networking
 
 object Model {
     data class Response(val results: List<RemoteSong>)

@@ -1,4 +1,4 @@
-package com.github.tomasz_m.songapp.networking
+package com.github.tomasz_m.songapp.repository.networking
 
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
