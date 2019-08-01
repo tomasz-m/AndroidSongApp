@@ -11,6 +11,8 @@ import com.github.tomasz_m.songapp.R
 import com.github.tomasz_m.songapp.databinding.ActivityMainBinding
 import com.github.tomasz_m.songapp.domain.Song
 import com.github.tomasz_m.songapp.domain.SongsUseCase
+import com.github.tomasz_m.songapp.domain.Status
+import com.github.tomasz_m.songapp.presentation.list.SongAdapter
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 
@@ -49,18 +51,18 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun displayStatusSnackbar(status: SongsUseCase.Status) {
+    private fun displayStatusSnackbar(status: Status) {
         val messageResId: Int? = useCaseStatusToMessageResId(status)
         if (messageResId != null) {
             Snackbar.make(findViewById(R.id.rootLayout), messageResId, Snackbar.LENGTH_SHORT).show()
         }
     }
 
-    private fun useCaseStatusToMessageResId(status: SongsUseCase.Status): Int? {
+    private fun useCaseStatusToMessageResId(status: Status): Int? {
         return when (status) {
-            SongsUseCase.Status.OK -> null
-            SongsUseCase.Status.NETWORK_ERROR -> R.string.message_check_internet_connection
-            SongsUseCase.Status.NETWORK_ERROR_CASHED -> R.string.message_returned_cached
+            Status.OK -> null
+            Status.NETWORK_ERROR -> R.string.message_check_internet_connection
+            Status.NETWORK_ERROR_CASHED -> R.string.message_returned_cached
         }
     }
 }

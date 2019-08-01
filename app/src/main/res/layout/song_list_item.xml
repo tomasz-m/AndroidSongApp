@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+                name="song"
+                type="com.github.tomasz_m.songapp.domain.Song"/>
+    </data>
+    <LinearLayout
 
-    <TextView
-            android:textSize="18sp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/songName"
-            tools:text="Lalala nanana"/>
+            android:padding="20dp">
 
-    <TextView
-            android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/artistName"
-            tools:text="Jack Johnson"/>
+        <TextView
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{song.name}"
+                tools:text="Lalala nanana"/>
 
-    <TextView
-            android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/releaseYear"
-            tools:text="2019"/>
+        <TextView
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{song.artist}"
+                tools:text="Jack Johnson"/>
 
-</LinearLayout>
+        <TextView
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{song.releaseYear}"
+                tools:text="2019"/>
+
+    </LinearLayout>
+</layout>

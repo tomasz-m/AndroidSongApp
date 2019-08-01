@@ -27,7 +27,7 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="19dp" android:id="@+id/textView" android:layout_weight="1"
-                    android:visibility="@{viewModel.showEmptyView ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{safeUnbox(viewModel.showEmptyView) ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/swiperefresh"
                     app:layout_constraintTop_toBottomOf="@+id/view"
                     app:layout_constraintEnd_toEndOf="@+id/swiperefresh"
@@ -79,7 +79,7 @@
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                     android:id="@+id/swiperefresh"
                     android:layout_width="match_parent"
-                    app:refreshing="@{viewModel.isLoading}"
+                    app:refreshing="@{safeUnbox(viewModel.isLoading)}"
                     app:onRefreshListener="@{() -> viewModel.onRefresh()}"
                     tools:layout_editor_absoluteX="0dp"
                     app:layout_constraintTop_toBottomOf="@+id/radiogroup"
@@ -93,9 +93,7 @@
                         tools:listitem="@layout/song_list_item"/>
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
 </layout>

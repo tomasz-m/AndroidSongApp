@@ -1,28 +1,26 @@
 package com.github.tomasz_m.songapp.domain
 
-import kotlinx.coroutines.*
-import com.github.tomasz_m.songapp.domain.SongsUseCase.*
-
 class SongsUseCaseImpl(private val localSongRepository: SongRepository, val remoteSongRepository: SongRepository) :
     SongsUseCase {
 
-    override fun songs(source: Source, callback: (List<Song>, Status) -> Unit) {
+    override suspend fun songs(source: Source): SongsUseCaseResponse {
 
         when (source) {
-            Source.LOCAL -> GlobalScope.launch {
-                callback(localSongRepository.getSongs().songs, Status.OK)
-            }
-            Source.REMOTE -> GlobalScope.launch {
+            Source.LOCAL ->
+                return SongsUseCaseResponse(localSongRepository.getSongs().songs, Status.OK)
+
+            Source.REMOTE -> {
                 val response = remoteSongRepository.getSongs()
-                callback(response.songs, remoteRepoStatusToUseCaseStatus(response.status))
+                return SongsUseCaseResponse(response.songs, remoteRepoStatusToUseCaseStatus(response.status))
             }
-            Source.ALL -> GlobalScope.launch {
-                val remote = async { remoteSongRepository.getSongs() }
-                val local = async { localSongRepository.getSongs() }
-                callback(
-                    remote.await().songs + local.await().songs,
-                    remoteRepoStatusToUseCaseStatus(remote.await().status)
+            Source.ALL -> {
+                val remote = remoteSongRepository.getSongs()
+                val local = localSongRepository.getSongs()
+                return SongsUseCaseResponse(
+                    remote.songs + local.songs,
+                    remoteRepoStatusToUseCaseStatus(remote.status)
                 )
+
             }
         }
     }

@@ -22,27 +22,13 @@ class SongsUseCaseImplTest {
     @Mock
     private lateinit var remoteRepository: SongRepository
 
-    @Mock
-    private lateinit var callback: (List<Song>, SongsUseCase.Status) -> Unit
-
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
-
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(mainThreadSurrogate)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.close()
-    }
 
     @Test
     fun `requesting for remote data calls remote repository`() = runBlockingTest {
         val songsUseCase = SongsUseCaseImpl(localRepository, remoteRepository)
+        whenever(remoteRepository.getSongs()).thenReturn(SongRepository.SongsResult(emptyList(),SongRepository.Status.OK))
 
-        songsUseCase.songs(SongsUseCase.Source.REMOTE, callback)
+        songsUseCase.songs(Source.REMOTE)
 
         verify(remoteRepository, times(1)).getSongs()
     }
@@ -51,8 +37,9 @@ class SongsUseCaseImplTest {
     @Test
     fun `requesting for local data does not call remote repository`() = runBlockingTest {
         val songsUseCase = SongsUseCaseImpl(localRepository, remoteRepository)
+        whenever(localRepository.getSongs()).thenReturn(SongRepository.SongsResult(emptyList(),SongRepository.Status.OK))
 
-        songsUseCase.songs(SongsUseCase.Source.LOCAL, callback)
+        songsUseCase.songs(Source.LOCAL)
 
         verify(remoteRepository, never()).getSongs()
     }
