@@ -3,12 +3,13 @@ package com.github.tomasz_m.songapp.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.tomasz_m.songapp.domain.Song
 import com.github.tomasz_m.songapp.domain.SongsUseCase
 import com.github.tomasz_m.songapp.domain.Source
 import com.github.tomasz_m.songapp.domain.Status
 import com.github.tomasz_m.songapp.presentation.helpers.Event
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 enum class SourceFilterOptions {
@@ -25,11 +26,13 @@ class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
     private val _selectedRadioButton = MutableLiveData<SourceFilterOptions>().apply { value = SourceFilterOptions.ALL }
     val selectedRadioButton: LiveData<SourceFilterOptions>
         get() = _selectedRadioButton
-    private val _songs: MutableLiveData<List<Song>> by lazy {
+    private val songsLazy = lazy {
         MutableLiveData<List<Song>>().also { liveData -> loadSongs(liveData) }
     }
+    private val _songs: MutableLiveData<List<Song>> by songsLazy
     val songs: LiveData<List<Song>>
         get() = _songs
+    private var currentJob: Job? = null
 
 
     private val _notifications = MutableLiveData<Event<Status>>()
@@ -38,28 +41,28 @@ class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
         get() = _notifications
 
 
-
     fun onSelectedRadioButton(filterOption: SourceFilterOptions) {
         _selectedRadioButton.value = filterOption
         onRefresh()
     }
 
     fun onRefresh() {
-        _songs.apply { loadSongs(this) }
-//        loadSongs(_songs)
+        if (songsLazy.isInitialized()) {
+            loadSongs(_songs)
+        }
     }
 
 
     private fun loadSongs(liveData: MutableLiveData<List<Song>>) {
-        _isLoading.value = true
-        GlobalScope.launch {
+        currentJob?.cancel()
+        currentJob = viewModelScope.launch {
+            _isLoading.postValue(true)
             val source = filterOptionToSource(selectedRadioButton.value)
             val response = songsUseCase.songs(source)
             _showEmptyView.postValue(response.songs.isEmpty())
             liveData.postValue(response.songs)
             _isLoading.postValue(false)
             _notifications.postValue(Event(response.status))
-
         }
     }
 

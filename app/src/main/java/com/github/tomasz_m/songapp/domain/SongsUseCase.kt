@@ -12,6 +12,5 @@ data class SongsUseCaseResponse(val songs:List<Song>, val status: Status)
 
 interface SongsUseCase {
 
-
     suspend fun songs(source: Source):SongsUseCaseResponse
 }

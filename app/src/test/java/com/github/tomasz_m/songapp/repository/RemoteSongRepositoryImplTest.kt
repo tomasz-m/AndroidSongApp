@@ -33,7 +33,7 @@ class RemoteSongRepositoryImplTest {
             Response.success(Model.Response(listOf(Model.RemoteSong(1, "aaa", "bbb", "2019"))))
 
         whenever(api.getSongs()).thenReturn(response)
-        whenever(cache.hasFreshCash(any())).thenReturn(false)
+        whenever(cache.hasFreshCache(any())).thenReturn(false)
 
         assertEquals(
             remoteSongRepositoryImpl.getSongs().songs,
@@ -48,8 +48,8 @@ class RemoteSongRepositoryImplTest {
         val remoteSongRepositoryImpl = RemoteSongRepositoryImpl(api, cache)
 
         whenever(api.getSongs()).thenReturn(null)
-        whenever(cache.hasFreshCash(any())).thenReturn(false)
-        whenever(cache.getLatestCash(any())).thenReturn(null)
+        whenever(cache.hasFreshCache(any())).thenReturn(false)
+        whenever(cache.getLatestCache(any())).thenReturn(null)
 
         assertEquals(
             remoteSongRepositoryImpl.getSongs().status,

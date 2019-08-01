@@ -17,8 +17,8 @@ class RemoteSongRepositoryImpl(private val api: ApiInterface, private val cache:
     }
 
     override suspend fun getSongs(): SongsResult {
-        if (cache.hasFreshCash("all-songs")) {
-            cache.getLatestCash("all-songs")?.apply { return (SongsResult(this, Status.OK)) }
+        if (cache.hasFreshCache("all-songs")) {
+            cache.getLatestCache("all-songs")?.apply { return (SongsResult(this, Status.OK)) }
         }
 
         return try {
@@ -28,7 +28,7 @@ class RemoteSongRepositoryImpl(private val api: ApiInterface, private val cache:
             }else {
                 val songs = response.body()!!.results
                     .map { Song(it.trackName, it.artistName, stringDateToYear(it.releaseDate)) }
-                cache.setCash("all-songs", songs)
+                cache.setCache("all-songs", songs)
                 SongsResult(songs, Status.OK)
             }
 
@@ -38,7 +38,7 @@ class RemoteSongRepositoryImpl(private val api: ApiInterface, private val cache:
     }
 
     private fun getErrorResponse(): SongsResult {
-        cache.getLatestCash("all-songs")?.apply { return (SongsResult(this, Status.CACHED)) }
+        cache.getLatestCache("all-songs")?.apply { return (SongsResult(this, Status.CACHED)) }
         return SongsResult(emptyList(), Status.ERROR)
     }
 }

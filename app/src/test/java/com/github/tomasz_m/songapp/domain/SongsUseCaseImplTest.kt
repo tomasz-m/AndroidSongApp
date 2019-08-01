@@ -1,16 +1,14 @@
 package com.github.tomasz_m.songapp.domain
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.resetMain
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import com.nhaarman.mockitokotlin2.*
 
 
 @RunWith(MockitoJUnitRunner::class)
@@ -43,4 +41,6 @@ class SongsUseCaseImplTest {
 
         verify(remoteRepository, never()).getSongs()
     }
+
+
 }

@@ -1,7 +1,7 @@
 package com.github.tomasz_m.songapp.repository
 
 interface Cache<T> {
-    fun hasFreshCash(cashId: String): Boolean
-    fun getLatestCash(cashId: String): T?
-    fun setCash(cashId: String, data: T)
+    fun hasFreshCache(cashId: String): Boolean
+    fun getLatestCache(cashId: String): T?
+    fun setCache(cashId: String, data: T)
 }
