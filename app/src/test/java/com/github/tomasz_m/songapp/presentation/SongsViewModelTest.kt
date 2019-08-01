@@ -26,7 +26,7 @@ class SongsViewModelTest {
     @Mock
     lateinit var songsUseCase: SongsUseCase
 
-
+    @ExperimentalCoroutinesApi
     @get:Rule
     var coroutinesTestRule = CoroutinesTestRule()
 
@@ -34,6 +34,7 @@ class SongsViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
 
+    @ExperimentalCoroutinesApi
     @Test
     fun `selecting of remote source does not call remote repository when data was never accessed`() =
         coroutinesTestRule.testDispatcher.runBlockingTest {
@@ -44,18 +45,23 @@ class SongsViewModelTest {
             verify(songsUseCase, times(0)).songs(eq(Source.REMOTE))
         }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun `selecting of remote source calls remote repository after data was accessed`()  = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val viewModel = SongsViewModel(songsUseCase)
-        whenever(songsUseCase.songs(any())).thenReturn(SongsUseCaseResponse(emptyList(), Status.OK))
+    fun `selecting of remote source calls remote repository after data was accessed`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            val viewModel = SongsViewModel(songsUseCase)
+            val emptyResponse = SongsUseCaseResponse(emptyList(), Status.OK)
 
-        @Suppress("UNUSED_VARIABLE") val ignored = viewModel.songs
-        reset(songsUseCase)
+            whenever(songsUseCase.songs(any())).thenReturn(emptyResponse)
+            @Suppress("UNUSED_VARIABLE") val ignored = viewModel.songs
 
-        viewModel.onSelectedRadioButton(SourceFilterOptions.REMOTE)
+            reset(songsUseCase)
+            whenever(songsUseCase.songs(any())).thenReturn(emptyResponse)
 
-        verify(songsUseCase, times(1)).songs(eq(Source.REMOTE))
-    }
+            viewModel.onSelectedRadioButton(SourceFilterOptions.REMOTE)
+
+            verify(songsUseCase, times(1)).songs(eq(Source.REMOTE))
+        }
 
 
     @ExperimentalCoroutinesApi
