@@ -7,7 +7,7 @@ import com.github.tomasz_m.songapp.repository.networking.ApiInterface
 import org.koin.ext.isInt
 import java.lang.Exception
 
-class RemoteSongRepositoryImpl(private val api: ApiInterface, private val cash: Cash<List<Song>>) : SongRepository {
+class RemoteSongRepositoryImpl(private val api: ApiInterface, private val cache: Cache<List<Song>>) : SongRepository {
     private fun stringDateToYear(date: String): String {
         val year = date.split("-")[0]
         if (!year.isInt()) {
@@ -17,38 +17,28 @@ class RemoteSongRepositoryImpl(private val api: ApiInterface, private val cash: 
     }
 
     override suspend fun getSongs(): SongsResult {
-        if (cash.hasFreshCash("all-songs")) {
-            val cashedSongs = cash.getLatestCash("all-songs")
-            if (cashedSongs != null) {
-                return SongsResult(cashedSongs, Status.OK)
-            }
+        if (cache.hasFreshCash("all-songs")) {
+            cache.getLatestCash("all-songs")?.apply { return (SongsResult(this, Status.OK)) }
         }
 
-        try {
+        return try {
             val response = api.getSongs()
-            if (!response.isSuccessful) {
-                return getErrorResponse()
+            if (!response.isSuccessful || response.body()?.results == null) {
+                getErrorResponse()
+            }else {
+                val songs = response.body()!!.results
+                    .map { Song(it.trackName, it.artistName, stringDateToYear(it.releaseDate)) }
+                cache.setCash("all-songs", songs)
+                SongsResult(songs, Status.OK)
             }
-
-            if (response.body()?.results == null) {
-                return getErrorResponse()
-            }
-
-            val songs = response.body()!!.results
-                .map { Song(it.trackName, it.artistName, stringDateToYear(it.releaseDate)) }
-            cash.setCash("all-songs", songs)
-            return SongsResult(songs, Status.OK)
 
         } catch (e: Exception) {
-            return getErrorResponse()
+            getErrorResponse()
         }
     }
 
     private fun getErrorResponse(): SongsResult {
-        val cashedSongs = cash.getLatestCash("all-songs")
-        if (cashedSongs != null) {
-            return SongsResult(cashedSongs, Status.CACHED)
-        }
+        cache.getLatestCash("all-songs")?.apply { return (SongsResult(this, Status.CACHED)) }
         return SongsResult(emptyList(), Status.ERROR)
     }
 }

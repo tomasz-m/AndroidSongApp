@@ -6,7 +6,7 @@ import java.util.*
 /**
  * simple cash implementation to avoid too many network calls
  */
-class InMemoryCash<T> : Cash<T> {
+class InMemoryCache<T> : Cache<T> {
 
     private var cash: T? = null
     private var timestamp: Long? = null

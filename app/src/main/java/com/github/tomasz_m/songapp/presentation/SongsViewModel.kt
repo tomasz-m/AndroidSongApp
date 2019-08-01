@@ -16,14 +16,21 @@ enum class SourceFilterOptions {
 }
 
 class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
-    val isLoading = MutableLiveData<Boolean>().apply { value = false }
-    val showEmptyView = MutableLiveData<Boolean>().apply { value = false }
-    val selectedRadioButton = MutableLiveData<SourceFilterOptions>().apply { value = SourceFilterOptions.ALL }
-
-
+    private val _isLoading = MutableLiveData<Boolean>().apply { value = false }
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+    private val _showEmptyView = MutableLiveData<Boolean>().apply { value = false }
+    val showEmptyView: LiveData<Boolean>
+        get() = _showEmptyView
+    private val _selectedRadioButton = MutableLiveData<SourceFilterOptions>().apply { value = SourceFilterOptions.ALL }
+    val selectedRadioButton: LiveData<SourceFilterOptions>
+        get() = _selectedRadioButton
     private val _songs: MutableLiveData<List<Song>> by lazy {
         MutableLiveData<List<Song>>().also { liveData -> loadSongs(liveData) }
     }
+    val songs: LiveData<List<Song>>
+        get() = _songs
+
 
     private val _notifications = MutableLiveData<Event<Status>>()
 
@@ -31,11 +38,9 @@ class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
         get() = _notifications
 
 
-    val songs: LiveData<List<Song>>
-        get() = _songs
 
     fun onSelectedRadioButton(filterOption: SourceFilterOptions) {
-        selectedRadioButton.value = filterOption
+        _selectedRadioButton.value = filterOption
         onRefresh()
     }
 
@@ -46,13 +51,13 @@ class SongsViewModel(private val songsUseCase: SongsUseCase) : ViewModel() {
 
 
     private fun loadSongs(liveData: MutableLiveData<List<Song>>) {
-        isLoading.value = true
+        _isLoading.value = true
         GlobalScope.launch {
             val source = filterOptionToSource(selectedRadioButton.value)
             val response = songsUseCase.songs(source)
-            showEmptyView.postValue(response.songs.isEmpty())
+            _showEmptyView.postValue(response.songs.isEmpty())
             liveData.postValue(response.songs)
-            isLoading.postValue(false)
+            _isLoading.postValue(false)
             _notifications.postValue(Event(response.status))
 
         }

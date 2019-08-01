@@ -22,18 +22,18 @@ class RemoteSongRepositoryImplTest {
     lateinit var api: ApiInterface
 
     @Mock
-    lateinit var cash: Cash<List<Song>>
+    lateinit var cache: Cache<List<Song>>
 
     @ExperimentalCoroutinesApi
     @Test
     fun `returns list of songs`() = runBlockingTest {
-        val remoteSongRepositoryImpl = RemoteSongRepositoryImpl(api, cash)
+        val remoteSongRepositoryImpl = RemoteSongRepositoryImpl(api, cache)
 
         val response: Response<Model.Response> =
             Response.success(Model.Response(listOf(Model.RemoteSong(1, "aaa", "bbb", "2019"))))
 
         whenever(api.getSongs()).thenReturn(response)
-        whenever(cash.hasFreshCash(any())).thenReturn(false)
+        whenever(cache.hasFreshCash(any())).thenReturn(false)
 
         assertEquals(
             remoteSongRepositoryImpl.getSongs().songs,
@@ -45,11 +45,11 @@ class RemoteSongRepositoryImplTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `returns error status when request fails`() = runBlockingTest {
-        val remoteSongRepositoryImpl = RemoteSongRepositoryImpl(api, cash)
+        val remoteSongRepositoryImpl = RemoteSongRepositoryImpl(api, cache)
 
         whenever(api.getSongs()).thenReturn(null)
-        whenever(cash.hasFreshCash(any())).thenReturn(false)
-        whenever(cash.getLatestCash(any())).thenReturn(null)
+        whenever(cache.hasFreshCash(any())).thenReturn(false)
+        whenever(cache.getLatestCash(any())).thenReturn(null)
 
         assertEquals(
             remoteSongRepositoryImpl.getSongs().status,
