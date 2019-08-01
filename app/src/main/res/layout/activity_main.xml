@@ -5,11 +5,8 @@
         tools:context=".presentation.MainActivity">
 
     <data>
-
         <import type="android.view.View"/>
-
         <import type="com.github.tomasz_m.songapp.presentation.SourceFilterOptions"/>
-
         <variable
                 name="viewModel"
                 type="com.github.tomasz_m.songapp.presentation.SongsViewModel"/>
@@ -28,13 +25,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="19dp" android:id="@+id/textView" android:layout_weight="1"
                     android:visibility="@{safeUnbox(viewModel.showEmptyView) ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/swiperefresh"
+                    app:layout_constraintBottom_toBottomOf="@+id/swipeToRefresh"
                     app:layout_constraintTop_toBottomOf="@+id/view"
-                    app:layout_constraintEnd_toEndOf="@+id/swiperefresh"
-                    app:layout_constraintStart_toStartOf="@+id/swiperefresh"
+                    app:layout_constraintEnd_toEndOf="@+id/swipeToRefresh"
+                    app:layout_constraintStart_toStartOf="@+id/swipeToRefresh"
                     android:text="@string/songs_list_empty_message"/>
             <RadioGroup
-                    android:id="@+id/radiogroup"
+                    android:id="@+id/radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -71,18 +68,18 @@
 
 
             <View
-                    app:layout_constraintTop_toBottomOf="@+id/radiogroup"
+                    app:layout_constraintTop_toBottomOf="@+id/radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#aaaaaa" android:id="@+id/view"/>
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                    android:id="@+id/swiperefresh"
+                    android:id="@+id/swipeToRefresh"
                     android:layout_width="match_parent"
                     app:refreshing="@{safeUnbox(viewModel.isLoading)}"
                     app:onRefreshListener="@{() -> viewModel.onRefresh()}"
                     tools:layout_editor_absoluteX="0dp"
-                    app:layout_constraintTop_toBottomOf="@+id/radiogroup"
+                    app:layout_constraintTop_toBottomOf="@+id/radioGroup"
                     android:layout_height="0dp" app:layout_constraintBottom_toBottomOf="parent">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -95,5 +92,4 @@
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </layout>

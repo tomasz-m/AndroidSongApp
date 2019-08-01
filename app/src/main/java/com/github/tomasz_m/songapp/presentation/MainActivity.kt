@@ -25,11 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val songsUseCase: SongsUseCase by inject()
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        val songsUseCase: SongsUseCase by inject()
 
         val model = ViewModelProviders.of(this, ViewModelFactory(songsUseCase)).get(SongsViewModel::class.java)
 
